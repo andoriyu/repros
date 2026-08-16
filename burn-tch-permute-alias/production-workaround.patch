@@ -1,0 +1,58 @@
+FD-354: the one hand edit applied to burn-onnx-generated code.
+
+Apply after regenerating src/generated/encoder.rs via scripts/repro.sh:
+
+    git apply scripts/burn-tch-alias-workaround.patch
+    # or:  patch -p0 < scripts/burn-tch-alias-workaround.patch
+
+WHAT IT FIXES (a burn-tch bug, not a model bug):
+
+burn-tch 0.21 tracks whether a tensor's buffer may be mutated in place with a
+per-buffer Arc (`Storage::can_mut`, src/tensor.rs). Ops that produce a *view*
+are supposed to inherit the parent's storage handle via `TchTensor::from_existing`
+so the refcount reflects the sharing. `permute`, `swap_dims` and `flip` do not --
+they call `TchTensor::new` (src/ops/base.rs:652-668), which mints a fresh Arc for
+a buffer that is still shared with the parent.
+
+The generated encoder computes `tile1_out1.bool_and(tile1_out1.permute(...))`.
+With the aliasing lost, `can_mut()` says yes, `bool_and` takes libtorch's
+in-place `logical_and_`, and libtorch's own overlap assert kills the process:
+
+    unsupported operation: some elements of the input tensor and the
+    written-to tensor refer to a single memory location. Please clone()
+    the tensor before performing the operation.
+    (assert_no_partial_overlap at ATen/MemoryOverlap.cpp:97)
+
+The patch inserts a Bool -> Int -> Bool round trip on the permuted operand.
+`to_kind` allocates, so the alias is broken. It is the identity on values, so
+the model's numerics are untouched -- and the 30/30 exact-match parity against
+the onnxruntime baseline is the evidence that it is. The tensor is a [1,72,72]
+attention mask; the copy costs nothing.
+
+Delete this patch once burn-tch preserves parent storage through view ops.
+
+--- src/generated/encoder.rs
++++ src/generated/encoder.rs
+@@ -1053,6 +1053,22 @@
+         let unsqueeze17_out1: Tensor<B, 3, Bool> = slice18_out1
+             .unsqueeze_dims::<3>(&[1]);
+         let transpose2_out1 = tile1_out1.clone().permute([0, 2, 1]);
++        // ---- FD-354 burn-tch aliasing workaround (the ONLY hand edit in this
++        // generated file; see scripts/burn-tch-alias-workaround.patch and
++        // src/generated/mod.rs). `transpose2_out1` is a *view* of
++        // `tile1_out1` -- permute shares the buffer -- but burn-tch 0.21 builds
++        // the permuted child with `TchTensor::new` (ops/base.rs:657), minting a
++        // fresh storage Arc instead of inheriting the parent's via
++        // `from_existing`. That defeats burn-tch's own in-place safety check
++        // (`Storage::can_mut`), so `bool_and` takes the in-place
++        // `logical_and_` path and libtorch aborts: "some elements of the input
++        // tensor and the written-to tensor refer to a single memory location".
++        // Bool -> Int -> Bool round-trips through `to_kind`, which allocates,
++        // so the alias is broken. It is the identity on values (0/1 stays
++        // 0/1), so nothing about the numerics changes. The mask is [1,72,72];
++        // the copy is free. Remove once burn-tch preserves parent storage in
++        // permute/swap_dims/flip.
++        let transpose2_out1 = transpose2_out1.int().bool();
+         let mul8_out1 = conv2d5_out1.mul(expand11_out1);
+         let and2_out1 = tile1_out1.bool_and(transpose2_out1);
+         let relu3_out1 = burn::tensor::activation::relu(mul8_out1);

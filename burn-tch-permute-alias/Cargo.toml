@@ -1,0 +1,9 @@
+[package]
+name = "burn-tch-permute-alias"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+burn = { version = "0.21", default-features = false, features = ["std"] }
+burn-tch = "0.21"
