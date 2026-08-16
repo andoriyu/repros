@@ -10,9 +10,8 @@ the node**: code generation succeeds, no error, no diagnostic. The only tell is
 an `unused variable` warning in the generated Rust — the reshape's input is
 bound and never consumed.
 
-The resulting model compiles and runs with the reshape missing, i.e. wrong
-shapes/semantics downstream. This is the worst failure shape a code generator
-can have: the user gets a working binary of the wrong program.
+The resulting model compiles and runs with the reshape missing — wrong
+shapes/semantics downstream.
 
 ## Reproduce
 
@@ -31,8 +30,8 @@ clips). The fold is what localizes the drop to runtime-shape `Reshape` nodes.
 
 ## Suggested fix
 
-Fail loudly. If runtime-shape `Reshape` is unsupported, make import return an
-error naming the node — a code generator must never silently omit an op.
+If runtime-shape `Reshape` is unsupported, make import return an error naming
+the node.
 
 ## Versions
 

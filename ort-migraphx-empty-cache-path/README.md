@@ -21,9 +21,6 @@ directory. Setting `ORT_MIGRAPHX_MODEL_CACHE_PATH` to any writable directory is
 necessary and sufficient — with it set, the same model ran clean on five
 different AMD GPUs.
 
-Cost of the misdiagnosis in practice: the EP had been recorded as "broken" for
-this model family until the error was traced to the empty path.
-
 ## Reproduce
 
 1. Build/run any model through the MIGraphX EP via the `ort` crate (2.0-rc) or

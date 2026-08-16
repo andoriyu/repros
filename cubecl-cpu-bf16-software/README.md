@@ -13,10 +13,7 @@ Measured on a FastConformer encoder:
 - ~100–170× behind burn-tch's bf16 on the same machine (libtorch's CPU bf16
   path uses the hardware; tch-bf16 runs ~1.5–2× faster than tch-f32 there)
 
-Results are numerically correct — this is purely a "the fast path doesn't
-exist" defect. It also makes honest cross-engine bf16 comparisons misleading
-unless the reader knows: a benchmark of "burn CPU bf16" measures a software
-emulation.
+Results are numerically correct; the defect is performance only.
 
 ## Reproduce
 
