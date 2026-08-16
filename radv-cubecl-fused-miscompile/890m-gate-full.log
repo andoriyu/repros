@@ -1,0 +1,50 @@
+device: IntegratedGpu(0)
+clip00_chunk0000: max_abs=1.679e3 max_rel=8.020e1 FAIL
+clip00_chunk0001: max_abs=2.238e3 max_rel=1.814e2 FAIL
+clip00_chunk0005: max_abs=1.610e3 max_rel=2.227e2 FAIL
+clip00_chunk0020: max_abs=1.752e3 max_rel=1.614e2 FAIL
+clip01_chunk0000: max_abs=1.571e3 max_rel=1.915e2 FAIL
+clip01_chunk0003: max_abs=1.336e3 max_rel=1.095e2 FAIL
+handroll-check M2 PASS: 6 snapshots, worst max_rel=2.227e2 (gate atol=5e-4 rtol=1e-5)
+  mask clen=0: masked 140/144 (want 140) PASS
+  mask clen=2: masked 136/144 (want 136) PASS
+  mask clen=10: masked 120/144 (want 120) PASS
+  mask clen=40: masked 60/144 (want 60) PASS
+  mask clen=70: masked 0/144 (want 0) PASS
+  clip00_chunk0000 outputs: max_abs=1.314e-1 FAIL
+  clip00_chunk0000 new_cache_ch: max_abs=5.100e-1 FAIL
+  clip00_chunk0000 new_cache_t: max_abs=1.593e1 FAIL
+  clip00_chunk0000 l00_block_out: max_abs=5.716e1 FAIL
+  clip00_chunk0000 l08_block_out: max_abs=2.936e1 FAIL
+  clip00_chunk0000 l16_block_out: max_abs=1.314e-1 FAIL
+  clip00_chunk0001 outputs: max_abs=2.007e-1 FAIL
+  clip00_chunk0001 new_cache_ch: max_abs=5.123e-1 FAIL
+  clip00_chunk0001 new_cache_t: max_abs=1.346e1 FAIL
+  clip00_chunk0001 l00_block_out: max_abs=4.035e1 FAIL
+  clip00_chunk0001 l08_block_out: max_abs=4.917e1 FAIL
+  clip00_chunk0001 l16_block_out: max_abs=2.007e-1 FAIL
+  clip00_chunk0005 outputs: max_abs=5.604e-1 FAIL
+  clip00_chunk0005 new_cache_ch: max_abs=4.930e-1 FAIL
+  clip00_chunk0005 new_cache_t: max_abs=1.210e1 FAIL
+  clip00_chunk0005 l00_block_out: max_abs=2.945e1 FAIL
+  clip00_chunk0005 l08_block_out: max_abs=1.739e1 FAIL
+  clip00_chunk0005 l16_block_out: max_abs=5.604e-1 FAIL
+  clip00_chunk0020 outputs: max_abs=6.367e-1 FAIL
+  clip00_chunk0020 new_cache_ch: max_abs=4.338e-1 FAIL
+  clip00_chunk0020 new_cache_t: max_abs=8.393e0 FAIL
+  clip00_chunk0020 l00_block_out: max_abs=2.189e1 FAIL
+  clip00_chunk0020 l08_block_out: max_abs=1.090e1 FAIL
+  clip00_chunk0020 l16_block_out: max_abs=6.367e-1 FAIL
+  clip01_chunk0000 outputs: max_abs=1.025e-1 FAIL
+  clip01_chunk0000 new_cache_ch: max_abs=4.469e-1 FAIL
+  clip01_chunk0000 new_cache_t: max_abs=9.742e0 FAIL
+  clip01_chunk0000 l00_block_out: max_abs=3.966e1 FAIL
+  clip01_chunk0000 l08_block_out: max_abs=2.344e1 FAIL
+  clip01_chunk0000 l16_block_out: max_abs=1.025e-1 FAIL
+  clip01_chunk0003 outputs: max_abs=2.779e-1 FAIL
+  clip01_chunk0003 new_cache_ch: max_abs=6.919e-1 FAIL
+  clip01_chunk0003 new_cache_t: max_abs=1.496e1 FAIL
+  clip01_chunk0003 l00_block_out: max_abs=3.385e1 FAIL
+  clip01_chunk0003 l08_block_out: max_abs=2.788e1 FAIL
+  clip01_chunk0003 l16_block_out: max_abs=2.779e-1 FAIL
+handroll-check M4 PASS: 6 snapshots (outputs + both cache stacks)

@@ -1,0 +1,51 @@
+device: DiscreteGpu(0)
+WARNING: radv is not a conformant Vulkan implementation, testing use only.
+clip00_chunk0000: max_abs=1.221e-3 max_rel=8.252e-5 PASS
+clip00_chunk0001: max_abs=2.197e-3 max_rel=1.625e-4 PASS
+clip00_chunk0005: max_abs=1.404e-3 max_rel=1.419e-4 PASS
+clip00_chunk0020: max_abs=1.709e-3 max_rel=1.467e-4 PASS
+clip01_chunk0000: max_abs=1.709e-3 max_rel=1.571e-4 PASS
+clip01_chunk0003: max_abs=1.465e-3 max_rel=2.117e-4 PASS
+handroll-check M2 PASS: 6 snapshots, worst max_rel=2.117e-4 (gate atol=5e-4 rtol=1e-5)
+  mask clen=0: masked 140/144 (want 140) PASS
+  mask clen=2: masked 136/144 (want 136) PASS
+  mask clen=10: masked 120/144 (want 120) PASS
+  mask clen=40: masked 60/144 (want 60) PASS
+  mask clen=70: masked 0/144 (want 0) PASS
+  clip00_chunk0000 outputs: max_abs=3.576e-7 PASS
+  clip00_chunk0000 new_cache_ch: max_abs=5.066e-7 PASS
+  clip00_chunk0000 new_cache_t: max_abs=1.907e-5 PASS
+  clip00_chunk0000 l00_block_out: max_abs=9.155e-5 PASS
+  clip00_chunk0000 l08_block_out: max_abs=4.578e-5 PASS
+  clip00_chunk0000 l16_block_out: max_abs=3.576e-7 PASS
+  clip00_chunk0001 outputs: max_abs=1.431e-6 PASS
+  clip00_chunk0001 new_cache_ch: max_abs=5.066e-7 PASS
+  clip00_chunk0001 new_cache_t: max_abs=2.241e-5 PASS
+  clip00_chunk0001 l00_block_out: max_abs=5.341e-5 PASS
+  clip00_chunk0001 l08_block_out: max_abs=7.629e-5 PASS
+  clip00_chunk0001 l16_block_out: max_abs=1.431e-6 PASS
+  clip00_chunk0005 outputs: max_abs=3.174e-6 PASS
+  clip00_chunk0005 new_cache_ch: max_abs=9.313e-7 PASS
+  clip00_chunk0005 new_cache_t: max_abs=3.672e-5 PASS
+  clip00_chunk0005 l00_block_out: max_abs=4.196e-5 PASS
+  clip00_chunk0005 l08_block_out: max_abs=3.815e-5 PASS
+  clip00_chunk0005 l16_block_out: max_abs=3.174e-6 PASS
+  clip00_chunk0020 outputs: max_abs=3.219e-6 PASS
+  clip00_chunk0020 new_cache_ch: max_abs=1.431e-6 PASS
+  clip00_chunk0020 new_cache_t: max_abs=2.384e-5 PASS
+  clip00_chunk0020 l00_block_out: max_abs=4.578e-5 PASS
+  clip00_chunk0020 l08_block_out: max_abs=6.104e-5 PASS
+  clip00_chunk0020 l16_block_out: max_abs=3.219e-6 PASS
+  clip01_chunk0000 outputs: max_abs=3.576e-7 PASS
+  clip01_chunk0000 new_cache_ch: max_abs=8.196e-7 PASS
+  clip01_chunk0000 new_cache_t: max_abs=3.433e-5 PASS
+  clip01_chunk0000 l00_block_out: max_abs=8.392e-5 PASS
+  clip01_chunk0000 l08_block_out: max_abs=5.531e-5 PASS
+  clip01_chunk0000 l16_block_out: max_abs=3.576e-7 PASS
+  clip01_chunk0003 outputs: max_abs=1.633e-6 PASS
+  clip01_chunk0003 new_cache_ch: max_abs=5.960e-7 PASS
+  clip01_chunk0003 new_cache_t: max_abs=3.052e-5 PASS
+  clip01_chunk0003 l00_block_out: max_abs=3.052e-5 PASS
+  clip01_chunk0003 l08_block_out: max_abs=2.670e-5 PASS
+  clip01_chunk0003 l16_block_out: max_abs=1.633e-6 PASS
+handroll-check M4 PASS: 6 snapshots (outputs + both cache stacks)

@@ -12,18 +12,33 @@ pair:
 
 | Configuration | Result |
 |---|---|
-| RX 7900 XTX (gfx1100), RADV, **fused** SPIR-V | **GARBAGE** — first-layer max_abs error 1.679e3 / 1.571e3 vs oracle |
-| Radeon 890M (gfx1150), RADV, **fused** SPIR-V | **GARBAGE** — **numerically identical** wrong values (1.679e3 / 1.571e3) |
+| RX 7900 XTX (gfx1100, RDNA3), RADV, **fused** SPIR-V | **GARBAGE** — first-layer max_abs error 1.679e3 / 1.571e3 vs oracle |
+| Radeon 890M (gfx1150, RDNA3.5), RADV, **fused** SPIR-V | **GARBAGE** — **numerically identical** wrong values (1.679e3 / 1.571e3) |
+| Radeon AI PRO R9700 (gfx1201, RDNA4), RADV, fused | **PASS** — worst max_rel 2.117e-4, full gate clean |
 | GTX 1060, NVIDIA ICD, same fused SPIR-V | PASS — outputs ≤ 1.6e-6 vs oracle |
 | Same fused op trace, MLIR CPU JIT (cubecl-cpu) | PASS |
 | Same fused op trace, HIP RTC (cubecl-hip) on the same AMD silicon | PASS |
 | Same kernel **unfused** (fusion disabled), RADV, same GPUs | PASS |
 
-Two different RDNA generations producing bit-identical wrong values is the
-signature of a deterministic compiler-side miscompile in the shared shader
-compiler (ACO/NIR) — or of CubeCL emitting UB-carrying SPIR-V that the NVIDIA
-stack happens to execute as intended. Either way the wrongness is deterministic
-and machine-independent.
+Two RDNA3-family GPUs producing bit-identical wrong values — while RDNA4 and
+NVIDIA run the same workload correctly and the unfused equivalent is correct on
+the failing GPUs — is the signature of a deterministic miscompile in the RDNA3
+path of the shared shader compiler (ACO/NIR), or of CubeCL emitting UB-carrying
+SPIR-V that only that path is sensitive to. Either way the wrongness is
+deterministic and machine-independent.
+
+## Captured evidence in this directory
+
+- `890m-kernels.log` — **full per-kernel SPIR-V disassembly** of every kernel
+  the failing run compiles (59 kernels, `CUBECL_DEBUG_LOG` capture on the 890M,
+  Mesa 26.2.0). The miscompiled kernel is among the fusion-generated set
+  (`ElemwiseFuse` / `ReduceKernelFused` / fused matmul entries).
+- `890m-gate-full.log` — the failing run's gate output on the 890M: per-chunk
+  pre-encode diffs vs oracle, max_abs up to 2.238e3 (six chunks, all FAIL,
+  same signature values as the original triangulation).
+- `r9700-kernels.log` / `r9700-gate-full.log` — the same gate on RDNA4
+  (gfx1201): full pass. Kernel sets differ slightly (autotune picks per
+  device), which is why the 890M capture is the authoritative one.
 
 ## Reproduce
 
@@ -38,14 +53,16 @@ type B = burn_wgpu::CubeBackend<burn_wgpu::WgpuRuntime, f32, i64, u8>;  // unfus
 
 i.e. run any conv2d-heavy `burn` model on `burn-wgpu` 0.21 with fusion on vs
 off under RADV and diff the outputs against any reference (CPU backend works).
-The failing kernel's SPIR-V dump (via CubeCL's kernel-dump env or RenderDoc)
-should accompany the Mesa filing.
+The SPIR-V of every kernel the failing run compiles is captured in
+`890m-kernels.log` (via `CUBECL_DEBUG_LOG=<file>`, which logs each compiled
+kernel's disassembly).
 
 ## Versions
 
-Mesa 26.2 (RADV), burn / burn-wgpu 0.21.0, cubecl 0.10.0, Linux 6.18 (NixOS).
-Confirmed on gfx1100 (RX 7900 XTX) and gfx1150 (Radeon 890M); NVIDIA GTX 1060
-passes with the identical SPIR-V.
+Mesa 26.2.0 (RADV), vulkan-loader 1.4.350.0, burn / burn-wgpu 0.21.0,
+cubecl 0.10.0, Linux 6.18 (NixOS). Garbage on gfx1100 (RX 7900 XTX) and
+gfx1150 (Radeon 890M); clean on gfx1201 (Radeon AI PRO R9700) and NVIDIA
+GTX 1060 with the same workload.
 
 ## Impact
 
