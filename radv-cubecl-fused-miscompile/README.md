@@ -14,6 +14,7 @@ pair:
 |---|---|
 | RX 7900 XTX (gfx1100, RDNA3), RADV, **fused** SPIR-V | **GARBAGE** — first-layer max_abs error 1.679e3 / 1.571e3 vs oracle |
 | Radeon 890M (gfx1150, RDNA3.5), RADV, **fused** SPIR-V | **GARBAGE** — **numerically identical** wrong values (1.679e3 / 1.571e3) |
+| Radeon 840M (gfx1152, RDNA3.5), RADV, fused | **GARBAGE** — end-to-end: 8/30 transcripts, WER 1.0 (all deletions) |
 | Radeon AI PRO R9700 (gfx1201, RDNA4), RADV, fused | **PASS** — worst max_rel 2.117e-4, full gate clean |
 | GTX 1060, NVIDIA ICD, same fused SPIR-V | PASS — outputs ≤ 1.6e-6 vs oracle |
 | Same fused op trace, MLIR CPU JIT (cubecl-cpu) | PASS |
